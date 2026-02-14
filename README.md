@@ -1,40 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Read Quest 📚✨
+
+**Read Quest** is a gamified reading habit builder designed to turn your reading sessions into an epic adventure. Track your progress, earn XP, level up your "Page Warrior" rank, and unlock achievements as you conquer your library.
+
+## Features
+
+- **🏠 Interactive Dashboard**: Track your current read, view your level progress, and daily streaks.
+- **🔍 Book Search**: Find books by title or author using the Open Library API.
+- **🏴‍☠️ Gamification**: Earn XP for every page logged. Progress through ranks from *Novice Scrawler* to *Literary Legend*.
+- **📜 Daily Quests**: Complete daily reading challenges to earn bonus XP.
+- **🔖 Library Management**: Organize your books into *Reading*, *To Read*, and *Completed* lists.
+- **📱 Mobile First**: responsive design optimized for mobile use as a PWA.
+- **✨ Visual Polish**: Custom "hand-drawn" aesthetic with interactive confetti celebrations.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (Pages Router)
+- **Styling**: Vanilla CSS + Tailwind CSS (Custom "Hand-Drawn" Theme)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **State**: React Context API
+- **Fonts**: Patrick Hand (Google Fonts)
+- **Animations**: Canvas Confetti
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v18 or later)
+- npm
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+   ```bash
+   git clone https://github.com/lando786/reading-hobby.git
+   cd reading-hobby
+   ```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+2. Install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. Run the development server:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Data Persistence
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+This app uses **LocalStorage** to save your reading progress and library. Your data remains in your browser, keeping your reading list private and accessible even without a backend.
