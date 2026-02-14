@@ -44,7 +44,7 @@ export default function UserLevel() {
             {/* XP Bar */}
             <div className="w-full h-4 border-2 border-[var(--foreground)] rounded-full bg-white relative overflow-hidden">
                 <div
-                    className="h-full bg-[var(--secondary)] border-r-2 border-[var(--foreground)]"
+                    className="h-full bg-[var(--secondary)] border-r-2 border-[var(--foreground)] transition-all duration-500"
                     style={{ width: `${Math.max(5, Math.min(100, levelProgress))}%` }}
                 />
             </div>
