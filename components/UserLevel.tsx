@@ -1,8 +1,10 @@
 import { useUser } from '@/contexts/UserContext';
 import { Flame } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 export default function UserLevel() {
     const { stats } = useUser();
+    const { data: session } = useSession();
     const nextLevelXp = 100 * Math.pow(stats.level, 1.5);
     const prevLevelXp = 100 * Math.pow(stats.level - 1, 1.5);
     const levelProgress = ((stats.xp - prevLevelXp) / (nextLevelXp - prevLevelXp)) * 100;
@@ -18,17 +20,19 @@ export default function UserLevel() {
         "Tome Titan",
         "Literary Legend"
     ];
-    const title = titles[Math.min(stats.level - 1, titles.length - 1)];
+    const defaultTitle = titles[Math.min(stats.level - 1, titles.length - 1)];
+    const displayName = session?.user?.name || defaultTitle;
+    const avatarUrl = session?.user?.image || `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${stats.level}`;
 
     return (
         <div className="flex flex-col gap-2">
             <div className="flex justify-between items-end">
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full border-2 border-[var(--foreground)] bg-white flex items-center justify-center font-bold text-xl relative overflow-hidden">
-                        <img src={`https://api.dicebear.com/7.x/fun-emoji/svg?seed=${stats.level}`} alt="avatar" className="absolute inset-0" />
+                        <img src={avatarUrl} alt="avatar" className="absolute inset-0 w-full h-full object-cover" />
                     </div>
                     <div>
-                        <h2 className="font-bold text-lg leading-none">LVL {stats.level}: {title}</h2>
+                        <h2 className="font-bold text-lg leading-none">LVL {stats.level}: {displayName}</h2>
                         <div className="text-xs text-gray-600 font-bold">{Math.floor(stats.xp)} / {Math.floor(nextLevelXp)} XP</div>
                     </div>
                 </div>
