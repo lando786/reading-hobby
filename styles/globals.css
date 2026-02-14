@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FAFAF0; /* Cream paper */
+  --foreground: #2C2C2C; /* Pencil lead */
+  --primary: #FF6B6B; /* Red marker */
+  --secondary: #4ECDC4; /* Teal marker */
+  --accent: #FFE66D; /* Highlighter */
+  --font-patrick: var(--font-patrick-hand);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-patrick), sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-patrick), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Utilities for Hand-Drawn feel */
+@layer utilities {
+  .sketchy-border {
+    border: 2px solid var(--foreground);
+    border-radius: 2% 4% 3% 5% / 95% 4% 92% 5%;
+  }
+
+  .sketchy-box {
+    background: white;
+    border: 2px solid var(--foreground);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.1);
+  }
+}
