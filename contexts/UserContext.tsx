@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import confetti from 'canvas-confetti';
+import { useSession } from 'next-auth/react';
 
 export interface UserStats {
     xp: number;
@@ -28,6 +29,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 const STORAGE_KEY = 'reading-hobby-user';
 
 export function UserProvider({ children }: { children: ReactNode }) {
+    const { data: session, status } = useSession();
     const [stats, setStats] = useState<UserStats>({
         xp: 0,
         level: 1,
@@ -46,19 +48,57 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     // Load
     useEffect(() => {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            setStats(JSON.parse(stored));
+        const loadStats = async () => {
+            if (status === 'authenticated') {
+                try {
+                    const res = await fetch('/api/stats');
+                    const data = await res.json();
+                    if (data && data.userId) {
+                        setStats({
+                            xp: data.xp,
+                            level: data.level,
+                            streak: data.streak,
+                            lastReadDate: data.lastReadDate,
+                            dailyQuests: {
+                                read20Pages: data.read20Pages,
+                                read20Mins: data.read20Mins,
+                                finishChapter: data.finishChapter,
+                            },
+                            pagesReadToday: data.pagesReadToday,
+                            lastQuestReset: data.lastQuestReset,
+                        });
+                    }
+                } catch (error) {
+                    console.error("Failed to load stats from DB", error);
+                }
+            } else if (status === 'unauthenticated') {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    setStats(JSON.parse(stored));
+                }
+            }
+            setIsLoaded(true);
+        };
+
+        if (status !== 'loading') {
+            loadStats();
         }
-        setIsLoaded(true);
-    }, []);
+    }, [status]);
 
     // Save
     useEffect(() => {
-        if (isLoaded) {
+        if (!isLoaded) return;
+
+        if (status === 'authenticated') {
+            fetch('/api/stats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(stats),
+            }).catch(err => console.error("Failed to save stats to DB", err));
+        } else {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
         }
-    }, [stats, isLoaded]);
+    }, [stats, isLoaded, status]);
 
     // Daily Reset
     useEffect(() => {
