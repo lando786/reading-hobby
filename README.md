@@ -41,19 +41,17 @@
    ```
 
 2. **Configure Environment Variables**:
-   Copy the example environment file and fill in your details:
+   A `.env` file is included with default configuration for local development. You can modify it or create your own based on `.env.example`.
 
-   ```bash
-   cp .env.example .env
-   ```
-
-   *Note: You must provide a `NEXTAUTH_SECRET` and Google OAuth credentials.*
+   *Note: You must provide a valid `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env` for Google Authentication to work.*
 
 3. **Start the application**:
 
    ```bash
-   sudo docker compose up --build
+   sudo docker-compose down && sudo docker-compose up --build
    ```
+
+   *Note: The `down` command ensures any old containers/volumes are cleared if needed, but standard `up --build` is sufficient for updates.*
 
 4. **Initialize the database** (Run once the containers are up):
 
