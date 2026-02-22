@@ -1,14 +1,16 @@
 import { Book, getCoverUrl } from '@/lib/openlibrary';
-import { Plus, Check } from 'lucide-react';
+import { LibraryBook } from '@/hooks/useLibrary';
+import { Plus, Check, Star } from 'lucide-react';
 import { useState } from 'react';
 
 interface BookCardProps {
-    book: Book;
+    book: Book | LibraryBook;
     onAdd?: (book: Book) => void;
     isAdded?: boolean;
+    onReviewClick?: () => void;
 }
 
-export default function BookCard({ book, onAdd, isAdded = false }: BookCardProps) {
+export default function BookCard({ book, onAdd, isAdded = false, onReviewClick }: BookCardProps) {
     const [imgError, setImgError] = useState(false);
     const coverUrl = book.cover_i ? getCoverUrl(book.cover_i, 'M') : null;
 
@@ -35,11 +37,50 @@ export default function BookCard({ book, onAdd, isAdded = false }: BookCardProps
                 <h3 className="font-bold text-lg leading-tight mb-1">{book.title}</h3>
                 <p className="text-sm text-gray-600 mb-2">{book.author_name?.join(', ') || 'Unknown Author'}</p>
 
-                {book.number_of_pages_median && (
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded-full border border-gray-300">
-                        {book.number_of_pages_median} pages
-                    </span>
-                )}
+                <div className="flex flex-col gap-2">
+                    {book.number_of_pages_median && (
+                        <div>
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded-full border border-gray-300 inline-block">
+                                {book.number_of_pages_median} pages
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Review Section */}
+                    {'status' in book && book.status === 'completed' && (
+                        <div className="mt-1">
+                            {book.rating ? (
+                                <div className="flex flex-col gap-1">
+                                    <div className="flex text-[#FFD700]">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                size={14}
+                                                fill={i < (book.rating || 0) ? "currentColor" : "transparent"}
+                                                color={i < (book.rating || 0) ? "#FF8C00" : "var(--foreground)"}
+                                                strokeWidth={2}
+                                            />
+                                        ))}
+                                    </div>
+                                    {book.review && (
+                                        <p className="text-xs text-gray-600 italic line-clamp-2 border-l-2 border-gray-300 pl-2">
+                                            "{book.review}"
+                                        </p>
+                                    )}
+                                </div>
+                            ) : (
+                                onReviewClick && (
+                                    <button
+                                        onClick={onReviewClick}
+                                        className="text-xs font-bold text-[var(--primary)] hover:underline flex items-center gap-1 mt-1"
+                                    >
+                                        <Star size={12} strokeWidth={2} /> Leave a Review
+                                    </button>
+                                )
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Action */}

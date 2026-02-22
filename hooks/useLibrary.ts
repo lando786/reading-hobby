@@ -8,6 +8,8 @@ export interface LibraryBook extends Book {
     dateStarted?: string;
     dateFinished?: string;
     addedAt: string;
+    rating?: number;
+    review?: string;
 }
 
 const STORAGE_KEY = 'reading-hobby-library';

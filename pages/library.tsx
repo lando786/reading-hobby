@@ -5,12 +5,14 @@ import BookCard from '@/components/BookCard';
 import { BookOpen, CheckCircle, List, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
 import Link from 'next/link';
+import ReviewModal from '@/components/ReviewModal';
 
 type FilterType = 'all' | 'reading' | 'completed' | 'wishlist';
 
 export default function Library() {
     const { library, updateBook, removeBook } = useLibrary();
     const [filter, setFilter] = useState<FilterType>('all');
+    const [bookToReview, setBookToReview] = useState<LibraryBook | null>(null);
 
     const filteredBooks = library.filter(book => {
         if (filter === 'all') return true;
@@ -57,7 +59,10 @@ export default function Library() {
                     {filteredBooks.length > 0 ? (
                         filteredBooks.map(book => (
                             <div key={book.key} className="relative group">
-                                <BookCard book={book} />
+                                <BookCard
+                                    book={book}
+                                    onReviewClick={() => setBookToReview(book)}
+                                />
 
                                 {/* Quick Actions Overlay (visible on hover/focus or always present on mobile?) 
                              Let's make them always visible but subtle, or put them in the card content.
@@ -74,7 +79,10 @@ export default function Library() {
                                     )}
                                     {book.status === 'reading' && (
                                         <button
-                                            onClick={() => updateBook(book.key, { status: 'completed', dateFinished: new Date().toISOString() })}
+                                            onClick={() => {
+                                                updateBook(book.key, { status: 'completed', dateFinished: new Date().toISOString() });
+                                                setBookToReview(book);
+                                            }}
                                             className="text-xs font-bold text-green-600 hover:underline"
                                         >
                                             Mark Done
@@ -96,6 +104,18 @@ export default function Library() {
                     )}
                 </div>
             </div>
+
+            {bookToReview && (
+                <ReviewModal
+                    book={bookToReview}
+                    isOpen={true}
+                    onClose={() => setBookToReview(null)}
+                    onSubmit={(data) => {
+                        updateBook(bookToReview.key, data);
+                        setBookToReview(null);
+                    }}
+                />
+            )}
         </Layout>
     );
 }
